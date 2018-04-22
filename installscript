@@ -1,0 +1,266 @@
+#!/bin/bash
+# Forked  respin respun forked stolen and modified by DasGeek
+# Tested w/ Elementary OS Loki & Ubuntu 17 and 18.04 LTS BETA
+# Forked and spooned from some forum post I can no longer find in a galaxy of the internet
+# Version 1.2
+
+if [[ $EUID -ne 0 ]]; then
+   	echo "This script must be run as root type: sudo ./installscript" 
+   	exit 1
+else
+	#Update and Upgrade
+	echo "Updating and Upgrading"
+	yes | pacman -Syyu
+
+	yes | pacman -Syu dialog
+	cmd=(dialog --separate-output --checklist "Please Select Software you want to install:" 22 76 16)
+	options=(1 "Install Flatpak Repository" off
+			2 "Install Snaps Repository" off
+			3 "Install AUR Repository" off			
+			 4 "Sublime Text" off    # any option can be set to default to "on"
+	         5 "Simplenote" off
+	         6 "Gedit" off
+	         7 "Terminator" off
+	         8 "Filezilla" off
+	         9 "Zoom Meeting Client (Flatpak)" off
+	         10 "Telegram (SNAP)" off
+	         11 "SM Player Media Player" off
+	         12 "Firefox Browser" off
+	         13 "GIMP" off
+	         14 "OBS-Studio" off
+	         15 "Kdenlive" off
+			 16 "Atom" off
+			 17 "Putty" off
+			 18 "Steam (Valve)" off
+			 19 "PIA VPN (Network Mgr Version)" off
+			 20 "Docky" off
+			 21 "Lutris" off
+			 22 "Hexchat" off
+			 23 "Shotwell" off
+			 24 "Cheese" off
+			 25 "Audacity" off
+			 26 "Guvcview (webcam settings)" off
+			 27 "Pithos (Pandora)" off
+			 28 "Discord (Snap)" off
+			 29 "Etcher" off
+			 30 "Tilix" off
+			 31 "Synology NAS Backup" off
+			 32 "KXStudio Jack Setup (Advanced Audio)" off)
+		choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+		clear
+		for choice in $choices
+		do
+		    case $choice in
+	        1)	
+				#Install Flatpak Repository
+				echo "Installing Flatpak Repository"
+				pacman -Syu flatpak
+				;;
+
+			2)	
+				#Install Snap Repository
+				echo "Installing Snap Repository"
+				pacman -Sy snapd
+				systemctl enable --now snapd.socket
+				;;
+
+			3) #Install AUR Repository
+				echo "Installing AUR"
+				pacman -S base-devel yaourt
+				;;
+
+	        4)
+	            #Install Sublime Text*
+				echo "Installing Sublime Text"
+				yes | pacman -Syu sublime-text-dev
+				;;
+
+			5)
+			    #Simplenote
+				echo "Installing Simplenote"
+				yes | snap install simplenote
+				#won't show up in menus until run so running w/ disown
+				snap run simplenote & disown
+				;;
+
+
+	            
+    			
+    		6)	
+				#Install Gedit
+				echo "Gedit"
+				yes | pacman -Syu gedit
+				;;
+				
+			7)
+				#Terminator
+				echo "Installing Skynet/Terminator"
+				yes | pacman -Syu terminator
+				;;
+
+			8)
+				#Filezilla
+				echo "Filezilla not related to Godzilla"
+				yes | pacman -Syu filezilla
+				;;
+			9)
+				#Zoom
+				echo "Installing Zoom Meeting Client"
+				yes | flatpak install flathub org.freedesktop.Platform
+				yes | flatpak install flathub us.zoom.Zoom
+				;;
+			10)
+				#Telegram
+				echo "Telegram Snap"
+				yes | snap install telegram-desktop
+				;;
+
+		
+			11)
+				#SMPlayer
+				echo "SMPlayer"
+				yes | pacman -Syu smplayer
+				;;
+			
+			
+			12)
+
+				#Firefox Browser
+				echo "Firefox"
+				yes | pacman -Syu firefox
+
+				;;
+			13)
+
+				#GIMP
+				echo "Installing GIMP"
+				yes | pacman -Syu gimp
+				;;
+			14)
+				#OBS Studio
+				echo "Installing OBS Studio"
+				yes | pacman -Syu obs-studio
+				;;
+			15)
+
+				#Kdenlive
+				echo "Installing Kdenlive"
+				pacman -Syu kdenlive
+				yes | pacman -Syu breeze-icons
+				yes | pacman -Syu vlc
+				yes | pacman -Syu frei0r-plugins
+				yes | pacman -Syu dvd-author
+				yes | pacman -Syu mkisolinux
+				;;
+			
+
+			16)	#Atom
+				echo "Installing Atom"				
+				yes | pacman -Syu atom
+				;;
+
+			17)	#Putty
+				echo "Putty"
+				yes | pacman -Syu putty
+				;;
+
+			18)	#Steam
+				echo "Installing Steam"				
+				yes | pacman -Syu steam-native
+				;;
+
+			19)	#PIA VPN
+				echo "Installing PIA VPN Network Manager Version"
+				cd ~/Downloads				
+				wget http://www.privateinternetaccess.com/installer/pia-nm.sh
+				sudo sh ./pia-nm.sh
+				echo "After entering username, go to network manager and turn on VPN and select from PIA locations, enter password and boom!"
+				;;
+
+			20)	#Docky
+				echo "Installing Docky"
+				yes | pacman -Syu docky
+				;;
+
+			21)	#Lutris
+				echo "Installing Lutris"
+				yaourt lutris
+				;;
+
+			22)	#Hexchat
+				echo "Installing Hexchat"
+				yes | pacman -Syu hexchat
+				;;
+
+			23)	#Shotwell
+				echo "Installing Shotwell"
+				yes | pacman -Syu shotwell
+				;;
+			24)	#Cheese
+				echo "Installing Cheese"
+				yes | pacman -Syu cheese
+				;;
+
+			25) #Audacity
+				echo "installing Audacity"
+				yes | pacman -Syu audacity
+				;;
+
+			26) #Guvcview
+				echo "installing Guvcview"
+				yes | pacman -Syu guvcview
+				;;
+
+			27) #Pithos
+				echo "installing Pithos"
+				gpg --recv-keys B3C7CE210DE76DFC
+				currentuser=$(who | awk 'NR==1{print $1}')
+				sudo -u $currentuser yaourt pithos
+				;;
+				
+			28)
+				#Discord
+				echo "Installing Discord"
+				yes | snap install discord
+				;;
+
+			29) #Etcher ISO Creator
+			echo "Installing Etcher"
+			yes | pacman -Syu etcher
+			;;
+
+			30) #Tilix (Tiling Terminal)
+			echo "Installing Tilix"
+			yes | pacman -Syu tilix -y
+			;;
+
+			31) #Synology NAS Assistant & Backup
+			echo "Installing Syn Assist, CloudStation Backup"
+			currentuser=$(who | awk 'NR==1{print $1}')
+			sudo -u $currentuser yaourt synology-assistant 
+			sudo -u $currentuser yaourt synology-cloud-station-backup
+			;;
+
+			32) #Advanced Jack Audio Setup
+			echo "installing KXStudio Jack"
+			yes | pacman -Syu jack2-dbus ; carla ; cadence
+			#yes | pacman -Syu carla
+			#yes | pacman -Syu cadence 
+			currentuser=$(who | awk 'NR==1{print $1}')
+					sudo usermod -a -G audio $currentuser
+					# Download auto script github
+					su - $currentuser
+					cd ~/
+					mkdir jacksetup
+					cd ~/jacksetup
+					wget https://raw.githubusercontent.com/dasgeekchannel/jackaudioscript/master/jack_starter.sh
+					chmod +x ~/jacksetup/jack_starter.sh
+					chown -R $currentuser:$currentuser ~/jacksetup
+			# Optional to put script into autostart
+			cd ~/
+			cp ~/jacksetup/jack_starter.sh ~/.config/autostart
+			;;
+	    esac
+	done
+fi
+
